@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ====== Theme tokens (Tailwind v4 @theme) ====== */
+@theme {
+  /* brand palette */
+  --color-brand: #392c56; /* aubergine */
+  --color-fire:  #b91c1c; /* red accent */
+  --color-sand:  #f9f3eb; /* warm background */
+  --color-ink:   #111827; /* near-black text */
+
+  /* radii & shadow */
+  --radiusLg: 0.75rem;
+  --radiusXl: 1rem;
+  --shadowLg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ====== Optional baseline ====== */
+:root { color-scheme: light; }
+img, video { max-width: 100%; height: auto; }
+
+/* ====== Reusable utilities (names must be alphanumeric) ====== */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding-inline: 1.25rem;
+  padding-block: .7rem;
+  font-weight: 600;
+  border-radius: var(--radiusLg);
+  transition: filter .15s ease, transform .15s ease, background-color .15s ease, color .15s ease, border-color .15s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@utility btnPrimary {
+  background: var(--color-fire);
+  color: white;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility btnOutline {
+  border: 1px solid color-mix(in oklab, var(--color-ink) 22%, transparent);
+  color: var(--color-ink);
+  background: transparent;
 }
+
+@utility card {
+  background: white;
+  border: 1px solid color-mix(in oklab, var(--color-ink) 12%, transparent);
+  border-radius: var(--radiusXl);
+  box-shadow: var(--shadowLg);
+}
+
+@utility badge {
+  display: inline-block;
+  padding: .25rem .6rem;
+  border-radius: 9999px;
+  font-size: .75rem;
+  font-weight: 600;
+  background: #f3f4f6; /* gray-100 */
+  color: #374151;      /* gray-700 */
+}
+
+@utility wrap { margin-inline: auto; padding-inline: 1rem; max-width: 72rem; }
+@utility sectionPad { padding-block: 3.5rem; }
+@utility heading { font-weight: 800; letter-spacing: -0.02em; }
+@utility linkUnderline { text-decoration: underline; text-underline-offset: 2px; }
+@utility heroOverlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.45), rgba(0,0,0,0)); }
