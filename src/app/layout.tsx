@@ -1,14 +1,12 @@
+// src/app/layout.tsx
 import "./globals.css";
-import NeonNavBar from "@/components/NeonNavBar";
-import Footer from "@/components/Footer";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-sand text-ink">
-        <NeonNavBar />
+      {/* min-h-screen ensures the gradient fills the viewport */}
+      <body className="min-h-screen">
         {children}
-        <Footer />
       </body>
     </html>
   );
