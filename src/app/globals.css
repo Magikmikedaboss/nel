@@ -1,186 +1,111 @@
-/* Tailwind v3 entry points */
+/* ───────────────── Tailwind entry points ───────────────── */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ========== Base / Theme ========== */
+/* ───────────────── Base layer ───────────────── */
 @layer base {
   :root {
+    /* radii / shadows */
     --nf-radius-lg: 0.75rem;
     --nf-radius-xl: 1rem;
     --nf-shadow-card: 0 10px 25px -10px rgba(0,0,0,.25);
-    /* Neon palette */
-    --nf-neon-violet: #a855f7; /* violet-500 */
-    --nf-neon-fuchsia:#f0abfc; /* fuchsia-300 */
-    --nf-neon-cyan:   #22d3ee; /* cyan-400 */
-    --nf-ink:         #e8e8f6; /* near-white text */
-    --nf-bg-1:        #0a0118;
-    --nf-bg-2:        #1a0b2c;
-    --nf-bg-3:        #0a0112;
+
+    /* neon palette */
+    --nf-neon-cyan:    #22d3ee; /* cyan-400 */
+    --nf-neon-fuchsia: #f0abfc; /* fuchsia-300 */
+    --nf-neon-violet:  #a78bfa; /* violet-400 */
   }
 
   html, body { height: 100%; }
 
-  /* NEON THEME BODY — gradient + subtle noise */
+  /* Dark purple gradient page bg */
   body {
-    color: var(--nf-ink);
+    @apply text-white antialiased;
     background:
-      radial-gradient(600px 600px at 85% -10%, rgba(168,85,247,.18) 0%, transparent 40%),
-      radial-gradient(600px 600px at 15% 10%,  rgba(34,211,238,.10) 0%, transparent 35%),
-      radial-gradient(700px 700px at 80% 110%, rgba(240,171,252,.12) 0%, transparent 40%),
-      linear-gradient(180deg, var(--nf-bg-1) 0%, var(--nf-bg-2) 60%, var(--nf-bg-3) 100%);
-    background-attachment: fixed;
-    @apply antialiased;
+      radial-gradient(60% 60% at 20% 10%, rgba(167,139,250,.20), transparent 60%),
+      radial-gradient(70% 70% at 80% 0%, rgba(34,211,238,.12), transparent 60%),
+      radial-gradient(90% 90% at 50% 100%, rgba(240,171,252,.10), transparent 60%),
+      #0b0118;
   }
 
-  h1, h2, h3 { @apply font-heading; color: var(--nf-ink); }
+  h1, h2, h3 { @apply font-heading; }
 
-  /* nicer text selection (neon violet) */
-  ::selection { background: var(--nf-neon-violet); color: #0b0118; }
-}
+  ::selection {
+    background: var(--nf-neon-fuchsia);
+    color: #0b0118;
+  }
+} /* ← END base */
 
-/* ====== Legacy light-theme overrides (so you don't have to edit JSX now) ====== */
-@layer base {
-  .bg-sand { background-color: transparent !important; } /* kill light bg */
-  .text-ink { color: var(--nf-ink) !important; }        /* make 'ink' neon-light */
-}
-
-/* ========== Components ========== */
+/* ───────────────── Components layer ───────────────── */
 @layer components {
-  /* Buttons */
-  .btn { @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition outline-none; }
-  .btn:focus-visible { box-shadow: 0 0 0 3px rgba(168,85,247,.35); }
-
-  .btn-primary {
-    color: #0b0118;
-    background: linear-gradient(90deg, var(--nf-neon-violet), var(--nf-neon-cyan), var(--nf-neon-violet));
-    background-size: 200% 100%;
-    animation: btn-sheen 6s linear infinite;
-    box-shadow: 0 0 12px rgba(34,211,238,.45), 0 0 26px rgba(240,171,252,.25);
-  }
-  .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
-  .btn-primary:active { transform: translateY(0); }
-
-  .btn-secondary {
-    color: #0b0118;
-    background: linear-gradient(90deg, #c084fc, #93c5fd);
-  }
-
-  .btn-outline {
-    @apply text-white;
-    border: 1px solid transparent;
-    border-image: linear-gradient(90deg, var(--nf-neon-cyan), var(--nf-neon-fuchsia)) 1;
-    box-shadow: 0 0 10px rgba(168,85,247,.25);
-  }
-  .btn-outline:hover { background: rgba(168,85,247,.10); }
-
-  .btn-ghost { @apply text-white/80; }
-  .btn-ghost:hover { @apply text-white; background: rgba(255,255,255,.05); }
-
-  .icon-btn { @apply inline-flex h-10 w-10 items-center justify-center rounded-full; border: 1px solid rgba(240,171,252,.35); }
-  .icon-btn:hover { background: rgba(240,171,252,.08); box-shadow: 0 0 12px rgba(240,171,252,.25); }
-
-  /* Cards (keep your white cards for readable copy inside, but add a neon frame on hover via .neon-card) */
-  .card { @apply bg-white border border-gray-200 rounded-xl shadow-card; color: #0f1220; }
-
-  /* Neon hover frame/lift for ANY card */
-  .neon-card { transition: transform .2s ease, box-shadow .2s ease; box-shadow: 0 0 0 rgba(0,0,0,0); }
-  .neon-card:hover { transform: translateY(-2px); box-shadow: 0 0 18px rgba(34,211,238,.25), 0 0 28px rgba(240,171,252,.22); }
-
-  /* Badges & pills */
-  .badge { @apply inline-block rounded-full text-xs font-semibold px-3 py-1; background: rgba(240,171,252,.18); color: #ffeaff; border: 1px solid rgba(240,171,252,.35); }
-
   /* Layout helpers */
   .wrap { @apply max-w-6xl mx-auto px-4; }
   .section-pad { @apply py-14; }
   .section-narrow { @apply max-w-3xl mx-auto; }
 
-  /* Headings & effects */
+  /* Headings */
   .heading { @apply font-heading font-extrabold tracking-tight; }
   .h1 { @apply heading text-4xl sm:text-6xl; }
   .h2 { @apply heading text-2xl sm:text-3xl; }
   .gradient-brand {
-    background: linear-gradient(90deg, var(--nf-neon-violet), var(--nf-neon-cyan), var(--nf-neon-fuchsia));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-shadow: 0 0 18px rgba(168,85,247,.25);
+    @apply text-transparent bg-clip-text;
+    background-image: linear-gradient(90deg, var(--nf-neon-violet), var(--nf-neon-cyan), var(--nf-neon-fuchsia));
+    text-shadow: 0 0 18px rgba(34,211,238,.25);
   }
+
+  /* Cards */
+  .card {
+    @apply rounded-xl border border-white/15;
+    box-shadow: var(--nf-shadow-card);
+    background: rgba(255,255,255,.04);
+  }
+  .neon-card {
+    @apply transition;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+  }
+  .neon-card:hover {
+    box-shadow: 0 0 18px rgba(34,211,238,.25), 0 0 28px rgba(240,171,252,.22);
+    transform: translateY(-2px);
+  }
+
+  /* Buttons: base + guard rails so variants are always rounded */
+  .btn { @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition; }
+  .btn,
+  [class*=" btn-"],
+  [class^="btn-"] {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-semibold rounded-lg transition;
+  }
+
+  .btn-primary {
+    color: #0b0118;
+    background: linear-gradient(90deg, var(--nf-neon-cyan), var(--nf-neon-violet));
+  }
+  .btn-primary:hover { filter: brightness(1.06); }
+  .btn-secondary {
+    color: #0b0118;
+    background: linear-gradient(90deg, var(--nf-neon-fuchsia), var(--nf-neon-cyan));
+  }
+  .btn-outline {
+    @apply border text-white/90 hover:text-white;
+    border-color: rgba(255,255,255,.35);
+    background: transparent;
+  }
+  .btn-ghost { @apply text-white/80 hover:text-white hover:bg-white/5; }
+
+  .badge { @apply inline-block rounded-full bg-white/10 text-white/85 text-xs font-semibold px-3 py-1 border border-white/15; }
 
   /* Links */
-  .link-underline { position: relative; }
-  .link-underline::after {
-    content:""; position:absolute; left:0; right:0; bottom:-2px; height:2px;
-    background: linear-gradient(90deg, var(--nf-neon-cyan), var(--nf-neon-fuchsia));
-    box-shadow: 0 0 12px rgba(34,211,238,.35), 0 0 16px rgba(240,171,252,.25);
-    transform: scaleX(0); transform-origin:left; transition: transform .25s ease;
-  }
-  .link-underline:hover::after { transform: scaleX(1); }
+  .link-underline { @apply underline underline-offset-2 decoration-2; }
 
   /* Media frames */
-  .video-frame { @apply relative aspect-video w-full overflow-hidden rounded-xl border; border-color: rgba(240,171,252,.35); background: rgba(255,255,255,.02); }
+  .video-frame { @apply relative aspect-video w-full overflow-hidden rounded-xl border border-white/15; }
   .video-iframe { @apply absolute inset-0 h-full w-full; }
 
-  /* Hero overlay (tinted for neon vibe) */
-  .hero-overlay { @apply absolute inset-0; background: linear-gradient(to top, rgba(88,28,135,.65), rgba(34,211,238,.10), transparent 55%); }
+  /* Glass block */
+  .glass { @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-xl; }
 
-  /* Glass card (nice over photos) */
-  .glass { background: rgba(255,255,255,.06); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.18); border-radius: var(--nf-radius-xl); }
-}
-
-/* ========== Fun utilities / animations ========== */
-@layer utilities {
-  /* gentle float for images or badges */
-  @keyframes nf-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
-  .animate-float { animation: nf-float 6s ease-in-out infinite; }
-
-  /* marquee for logos/socials */
-  @keyframes nf-marquee { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
-  .marquee { @apply overflow-hidden; }
-  .marquee-track { @apply flex gap-8 whitespace-nowrap will-change-transform; animation: nf-marquee 18s linear infinite; }
-
-  /* tilt effect for album art */
-  .tilt-on-hover { @apply transition-transform; transform: perspective(800px) rotateX(0) rotateY(0); }
-  .tilt-on-hover:hover { transform: perspective(800px) rotateX(2deg) rotateY(-3deg) scale(1.01); }
-
-  /* Film look (optional — use on hero image) */
-  .film-tone { filter: contrast(1.08) saturate(1.22) sepia(.12); }
-  .film-scan { pointer-events:none; position:absolute; inset:0; opacity:.22; mix-blend-mode:overlay;
-    background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0, rgba(255,255,255,.05) 1px, transparent 2px, transparent 3px); }
-  .film-grain { pointer-events:none; position:absolute; inset:0; opacity:.10; mix-blend-mode:overlay;
-    background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' preserveAspectRatio='none'>\
-  <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/></filter>\
-  <rect width='100%' height='100%' filter='url(%23n)' opacity='.6'/>\
-</svg>");
-    background-size: cover; animation: nf-grain 6s steps(2,end) infinite; }
-  .vignette { pointer-events:none; position:absolute; inset:0;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.42) 100%); }
-
-  /* quick neon ring you can add anywhere */
-  .ring-neon { box-shadow: 0 0 14px rgba(34,211,238,.28), 0 0 24px rgba(240,171,252,.22); }
-
-  /* juicy CTA pulse */
-  .btn-primary-glow { animation: neon-pulse 2.4s ease-in-out infinite; }
-}
-
-@keyframes nf-grain {
-  0%,100% { transform: translate(0,0) }
-  25% { transform: translate(-5%, 5%) }
-  50% { transform: translate(5%, -5%) }
-  75% { transform: translate(-5%, -5%) }
-}
-
-@keyframes neon-pulse {
-  0%,100% { box-shadow: 0 0 10px rgba(168,85,247,.35), 0 0 24px rgba(34,211,238,.20); }
-  50%     { box-shadow: 0 0 16px rgba(34,211,238,.45), 0 0 36px rgba(240,171,252,.28); }
-}
-
-@keyframes btn-sheen {
-  0% { background-position-x: 0% }
-  100% { background-position-x: 200% }
-}
-
-/* ===== NEON NAV (if you keep your existing NavBar component names) ===== */
-@layer components {
+  /* Neon nav */
   .glass-neon {
     background: rgba(10,1,24,.6);
     backdrop-filter: blur(10px);
@@ -212,8 +137,9 @@
     background: linear-gradient(90deg, var(--nf-neon-cyan), var(--nf-neon-violet));
     box-shadow: 0 0 12px rgba(34,211,238,.6), 0 0 28px rgba(217,70,239,.35);
   }
+
   .neon-outline {
-    @apply inline-flex items-center justify-center rounded-md border px-3 py-2 text-sm text-white/80 hover:text-white;
+    @apply inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm text-white/80 hover:text-white;
     border-color: rgba(217,70,239,.6);
     box-shadow: 0 0 10px rgba(217,70,239,.45);
   }
@@ -225,11 +151,76 @@
     background-size: 200% 100%;
     animation: glow-run 6s linear infinite;
   }
+} /* ← END components */
+
+/* ───────────────── Utilities layer ───────────────── */
+@layer utilities {
+  /* subtle float */
+  @keyframes nf-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+  .animate-float { animation: nf-float 6s ease-in-out infinite; }
+
+  /* marquee */
+  @keyframes nf-marquee { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+  .marquee { @apply overflow-hidden; }
+  .marquee-track { @apply flex gap-8 whitespace-nowrap will-change-transform; animation: nf-marquee 18s linear infinite; }
+
+  /* tilt */
+  .tilt-on-hover { @apply transition-transform; transform: perspective(800px) rotateX(0) rotateY(0); }
+  .tilt-on-hover:hover { transform: perspective(800px) rotateX(2deg) rotateY(-3deg) scale(1.01); }
+
+  /* hero readability overlay if you want a utility class */
+  .hero-overlay { @apply absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent; }
+
+  /* film look */
+  .film-tone { filter: contrast(1.08) saturate(1.22) sepia(.12); }
+
+  .film-scan {
+    pointer-events: none; position: absolute; inset: 0; opacity: .22; mix-blend-mode: overlay;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.05) 0,
+      rgba(255,255,255,.05) 1px,
+      transparent 2px,
+      transparent 3px
+    );
+  }
+
+  /* Use ONE-LINE data URI to avoid PostCSS parsing issues */
+  .film-grain {
+    pointer-events: none; position: absolute; inset: 0; opacity: .10; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' preserveAspectRatio='none'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.6'/></svg>");
+    background-size: cover;
+    animation: nf-grain 6s steps(2,end) infinite;
+  }
+
+  .vignette {
+    pointer-events: none; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.42) 100%);
+  }
+
+  /* quick neon ring */
+  .ring-neon { box-shadow: 0 0 14px rgba(34,211,238,.28), 0 0 24px rgba(240,171,252,.22); }
+
+  /* CTA pulse */
+  .btn-primary-glow { animation: neon-pulse 2.4s ease-in-out infinite; }
+} /* ← END utilities */
+
+/* ───────────────── Keyframes (outside layers is fine) ───────────────── */
+@keyframes nf-grain {
+  0%,100% { transform: translate(0,0) }
+  25% { transform: translate(-5%, 5%) }
+  50% { transform: translate(5%, -5%) }
+  75% { transform: translate(-5%, -5%) }
+}
+
+@keyframes neon-pulse {
+  0%,100% { box-shadow: 0 0 10px rgba(168,85,247,.35), 0 0 24px rgba(34,211,238,.20); }
+  50%     { box-shadow: 0 0 16px rgba(34,211,238,.45), 0 0 36px rgba(240,171,252,.28); }
 }
 
 @keyframes glow-run { 0% { background-position-x: 0% } 100% { background-position-x: 200% } }
 
-/* Respect reduced motion */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .film-grain, .btn-primary-glow { animation: none; }
+  .film-grain, .btn-primary-glow, .marquee-track, .tilt-on-hover:hover { animation: none !important; transform: none !important; }
 }
