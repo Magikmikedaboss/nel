@@ -2,20 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Base ───────────────────────────────────────────────────────────── */
+/* ───────────────────────── Base ───────────────────────── */
 @layer base {
   :root{
-    /* High-contrast neon palette */
-    --neon-pink:   #ff4ed0;  /* vibrant magenta/pink */
-    --neon-cyan:   #22d3ee;  /* electric cyan (Tailwind cyan-400) */
-    --neon-violet: #a78bfa;  /* violet glow (violet-400) */
-    --page:        #0b0118;  /* deep purple page */
+    /* Neon (default) */
+    --neon-pink:   #ff4ed0;
+    --neon-cyan:   #22d3ee;
+    --neon-violet: #a78bfa;
+    --page:        #0b0118;
     --card-shadow: 0 10px 25px -10px rgba(0,0,0,.35);
+  }
+
+  /* Pro theme (set <html data-theme="pro">) */
+  :root[data-theme="pro"]{
+    --page:        #0b0f14;
+    --neon-pink:   #93c5fd; /* sky-300 */
+    --neon-cyan:   #60a5fa; /* blue-400 */
+    --neon-violet: #c7d2fe; /* indigo-200 */
   }
 
   html, body { height: 100%; }
 
-  /* Global neon gradient background */
+  /* Optional: silence Next warning by letting you opt-in */
+  html[data-scroll-behavior="smooth"] { scroll-behavior: smooth; }
+
+  /* Global gradient background (uses variables) */
   .page-bg{
     background:
       radial-gradient(60% 60% at 20% 10%, rgba(167,139,250,.20), transparent 60%),
@@ -25,7 +36,7 @@
     color: white;
   }
 
-  /* iOS-safe fixed background: clones the gradient as a pinned layer */
+  /* iOS-safe fixed background duplication */
   body.bg-fixed-ios::before {
     content: "";
     position: fixed;
@@ -35,33 +46,57 @@
       radial-gradient(60% 60% at 20% 10%, rgba(167,139,250,.20), transparent 60%),
       radial-gradient(70% 70% at 80% 0%,  rgba(34,211,238,.12), transparent 60%),
       radial-gradient(90% 90% at 50% 100%, rgba(240,171,252,.10), transparent 60%),
-      #0b0118;
+      var(--page);
     pointer-events: none;
   }
 
   ::selection { background: var(--neon-pink); color: #0b0118; }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
-/* ─── Components ─────────────────────────────────────────────────────── */
+/* ─────────────────────── Components ───────────────────── */
 @layer components {
   /* Layout helpers */
   .wrap{ @apply max-w-6xl mx-auto px-4; }
-  .section-pad{ @apply py-14; }
+  .section-pad{ @apply py-14 md:py-16; }
 
-  /* Surfaces (cards/blocks) — readable over the gradient */
+  /* Cards / Surfaces */
   .surface {
     @apply rounded-2xl border;
-    background: rgba(255, 255, 255, 0.08);   /* lighter glass panel */
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(6px) saturate(120%);
     box-shadow: 0 10px 25px -10px rgba(0,0,0,.6);
+    color-scheme: dark;
   }
   .surface-alt {
     @apply rounded-2xl border;
-    background: rgba(255, 255, 255, 0.12);   /* even lighter option */
+    background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(8px) saturate(150%);
     box-shadow: 0 8px 20px -8px rgba(0,0,0,.5);
+    color-scheme: dark;
+  }
+
+  /* Pro theme surface tweaks */
+  :root[data-theme="pro"] .surface{
+    background: rgba(255,255,255,.06);
+    border-color: rgba(255,255,255,.12);
+    backdrop-filter: blur(5px) saturate(110%);
+  }
+  :root[data-theme="pro"] .surface-alt{
+    background: rgba(255,255,255,.09);
+    border-color: rgba(255,255,255,.18);
+    backdrop-filter: blur(7px) saturate(120%);
   }
 
   /* Headings */
@@ -74,13 +109,16 @@
     text-shadow: 0 0 18px rgba(34,211,238,.25);
   }
 
-  /* Buttons (use `transition` instead of non-existent `transition-shadow`) */
+  /* Buttons */
   .btn{
     @apply inline-flex items-center justify-center gap-2
            px-5 py-2.5 font-semibold rounded-lg
            transition transition-colors transition-transform duration-200
            cursor-pointer select-none;
   }
+  .btn-sm{ @apply px-3 py-1.5 text-sm; }
+  .btn-lg{ @apply px-6 py-3 text-base; }
+
   .btn-primary{
     color:#0b0118;
     background: linear-gradient(90deg, var(--neon-cyan), var(--neon-violet));
@@ -117,18 +155,25 @@
                 0 0 0 6px rgba(255,78,208,.35);
   }
 
-  /* Header / nav */
+  /* Header / Navbar */
   .glass-neon{
     background: rgba(10,1,24,.6);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(240,171,252,.25);
     box-shadow: 0 0 15px rgba(217,70,239,.22), 0 0 35px rgba(34,211,238,.18);
   }
+  :root[data-theme="pro"] .glass-neon{
+    background: rgba(6,10,16,.6);
+    border-bottom-color: rgba(148,163,184,.25);
+    box-shadow: 0 0 15px rgba(148,163,184,.18), 0 0 35px rgba(99,102,241,.14);
+  }
+
   .neon-logo{
     @apply text-2xl font-extrabold text-transparent bg-clip-text;
     background-image: linear-gradient(90deg, var(--neon-violet), var(--neon-cyan), var(--neon-pink));
     text-shadow: 0 0 18px rgba(34,211,238,.35);
   }
+
   .nav-link{
     @apply px-3 py-2 text-sm font-semibold text-white/80 rounded-md transition;
   }
@@ -146,8 +191,13 @@
   .video-iframe{ @apply absolute inset-0 h-full w-full; }
 }
 
-/* ─── Utilities ──────────────────────────────────────────────────────── */
+/* ─────────────────────── Utilities ────────────────────── */
 @layer utilities {
-  .tilt-on-hover{ @apply transition-transform; transform: perspective(800px) rotateX(0) rotateY(0); }
-  .tilt-on-hover:hover{ transform: perspective(800px) rotateX(2deg) rotateY(-3deg) scale(1.01); }
+  .tilt-on-hover{
+    @apply transition-transform;
+    transform: perspective(800px) rotateX(0) rotateY(0);
+  }
+  .tilt-on-hover:hover{
+    transform: perspective(800px) rotateX(2deg) rotateY(-3deg) scale(1.01);
+  }
 }

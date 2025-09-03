@@ -12,12 +12,31 @@ const LINKS = [
   { href: "/contact", label: "Booking" },
 ];
 
+type Theme = "neon" | "pro";
+
 export default function NeonNavBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState<Theme>("neon");
 
   // Close the mobile menu on route change
   useEffect(() => setOpen(false), [pathname]);
+
+  // Hydrate theme from localStorage and apply to <html data-theme="...">
+  useEffect(() => {
+    const saved = (typeof window !== "undefined"
+      ? (localStorage.getItem("theme") as Theme | null)
+      : null) || "neon";
+    setTheme(saved);
+    document.documentElement.dataset.theme = saved;
+  }, []);
+
+  const toggleTheme = () => {
+    const next: Theme = theme === "neon" ? "pro" : "neon";
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("theme", next);
+  };
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -26,7 +45,9 @@ export default function NeonNavBar() {
     <header className="glass-neon sticky top-0 z-50">
       <div className="wrap relative flex h-16 md:h-20 items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="neon-logo">Nel Fuoco</Link>
+        <Link href="/" className="neon-logo">
+          Nel Fuoco
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:block" aria-label="Primary">
@@ -48,15 +69,27 @@ export default function NeonNavBar() {
           </ul>
         </nav>
 
-        {/* Right-side CTA (desktop) */}
-        <div className="hidden md:block">
-          <Link href="/tour" className="btn btn-primary">Tickets</Link>
+        {/* Right-side actions (desktop) */}
+        <div className="hidden md:flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="btn btn-outline"
+            aria-label="Toggle theme"
+            aria-pressed={theme === "pro"}
+            title={theme === "neon" ? "Switch to Pro theme" : "Switch to Neon theme"}
+          >
+            {theme === "neon" ? "Neon" : "Pro"}
+          </button>
+          <Link href="/tour" className="btn btn-primary">
+            Tickets
+          </Link>
         </div>
 
         {/* Mobile toggle */}
         <button
           type="button"
-          className="md:hidden btn btn-outline btn-sm"
+          className="md:hidden btn btn-outline"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-menu"
@@ -88,15 +121,22 @@ export default function NeonNavBar() {
                 </li>
               );
             })}
-            <li>
+            <li className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="btn btn-outline w-full justify-center"
+                aria-label="Toggle theme"
+                aria-pressed={theme === "pro"}
+              >
+                Theme: {theme === "neon" ? "Neon" : "Pro"}
+              </button>
               <Link href="/tour" className="btn btn-primary w-full justify-center">
                 Tickets
               </Link>
             </li>
           </ul>
         </nav>
-
-        {/* Removed the neon-bar to avoid the blue line */}
       </div>
     </header>
   );
