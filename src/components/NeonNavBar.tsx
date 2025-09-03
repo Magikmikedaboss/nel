@@ -4,76 +4,100 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const links = [
+const LINKS = [
   { href: "/", label: "Home" },
   { href: "/music", label: "Music" },
   { href: "/media", label: "Media" },
   { href: "/tour", label: "Tour" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact", label: "Booking" },
 ];
 
-export default function NavBar() {
-  const pathname = usePathname() || "/";
+export default function NeonNavBar() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  // Close the mobile menu on route change
   useEffect(() => setOpen(false), [pathname]);
 
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
   return (
-    <header className="sticky top-0 z-50">
-      <div className="relative glass-neon">
-        <div className="wrap flex h-16 items-center justify-between text-white">
-          <Link href="/" className="neon-logo" aria-label="Nel Fuoco — Home">
-            Nel Fuoco
-          </Link>
+    <header className="glass-neon sticky top-0 z-50">
+      <div className="wrap relative flex h-16 md:h-20 items-center justify-between">
+        {/* Brand */}
+        <Link href="/" className="neon-logo">Nel Fuoco</Link>
 
-          <nav className="hidden md:flex items-center gap-1">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={`nav-link ${pathname === l.href ? "active" : ""}`}
-              >
-                {l.label}
-              </Link>
-            ))}
-            <Link href="/music" className="ml-2 neon-cta">Listen</Link>
-          </nav>
+        {/* Desktop nav */}
+        <nav className="hidden md:block" aria-label="Primary">
+          <ul className="flex items-center gap-1">
+            {LINKS.map((l) => {
+              const active = isActive(l.href);
+              return (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className={`nav-link ${active ? "active" : ""}`}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-          <button
-            onClick={() => setOpen((o) => !o)}
-            className="md:hidden neon-outline"
-            aria-expanded={open}
-            aria-controls="mnav"
-          >
-            Menu
-          </button>
+        {/* Right-side CTA (desktop) */}
+        <div className="hidden md:block">
+          <Link href="/tour" className="btn btn-primary">Tickets</Link>
         </div>
-        <div className="neon-bar" />
-      </div>
 
-      {open && (
-        <div
-          id="mnav"
-          className="md:hidden bg-gray-900/70 backdrop-blur-md border-b border-white/20"
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          className="md:hidden btn btn-outline btn-sm"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          aria-label="Toggle menu"
         >
-          <div className="wrap py-3 flex flex-col">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={
-                  "px-3 py-2 rounded-md transition " +
-                  (pathname === l.href
-                    ? "bg-fuchsia-500/15 text-white"
-                    : "text-white/80 hover:text-white hover:bg-white/5")
-                }
-              >
-                {l.label}
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z" />
+          </svg>
+        </button>
+
+        {/* Mobile drawer */}
+        <nav
+          id="mobile-menu"
+          className={`absolute left-0 right-0 top-full md:hidden ${open ? "block" : "hidden"}`}
+          aria-label="Mobile"
+        >
+          <ul className="border-t border-white/10 bg-black/70 backdrop-blur-md shadow-lg p-3 space-y-1">
+            {LINKS.map((l) => {
+              const active = isActive(l.href);
+              return (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className={`nav-link block ${active ? "active" : ""}`}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              );
+            })}
+            <li>
+              <Link href="/tour" className="btn btn-primary w-full justify-center">
+                Tickets
               </Link>
-            ))}
-            <Link href="/music" className="mt-2 neon-cta">Listen</Link>
-          </div>
-        </div>
-      )}
+            </li>
+          </ul>
+        </nav>
+
+        {/* Removed the neon-bar to avoid the blue line */}
+      </div>
     </header>
   );
 }
